@@ -10,11 +10,25 @@ const getAllTodo = (setTodo) => {
 };
 
 const addTodo = (text, setText, setTodo) => {
-  axios.post(`${baseURL}/save`, { text }).then((data) => {
-    console.log(data);
-    setText("");
-    getAllTodo(setTodo);
-  });
+  axios
+    .post(`${baseURL}/save`, { text })
+    .then((data) => {
+      console.log(data);
+      setText("");
+      getAllTodo(setTodo);
+    })
+    .catch((err) => console.log(err));
 };
 
-export { getAllTodo, addTodo };
+const updateTodo = (todoId, text, setTodo, setText, setIsUpdating) => {
+  axios
+    .post(`${baseURL}/update`, { _id: todoId, text })
+    .then((data) => {
+      setText("");
+      setIsUpdating(false);
+      getAllTodo(setTodo);
+    })
+    .catch((err) => console.log(err));
+};
+
+export { getAllTodo, addTodo, updateTodo };
