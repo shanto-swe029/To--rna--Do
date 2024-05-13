@@ -1,6 +1,13 @@
+import { useEffect, useState } from "react";
 import Todo from "./components/Todo";
+import { getAllTodo } from "./utils/HandleAPI";
 
 function App() {
+  const [todo, setTodo] = useState([]);
+  useEffect(() => {
+    getAllTodo(setTodo);
+  }, []);
+
   return (
     <div className="App">
       <div className="container">
@@ -10,9 +17,9 @@ function App() {
           <div className="add">Add</div>
         </div>
         <div className="list">
-          <Todo text="buy shirt" />
-          <Todo text="pay bill"/>
-          <Todo text="shop from local store"/>
+          {todo.map((item) => (
+            <Todo key={item._id} text={item.text} />
+          ))}
         </div>
       </div>
     </div>
