@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
 import Todo from "./components/Todo";
-import { addTodo, getAllTodo } from "./utils/HandleAPI";
+import { addTodo, getAllTodo, updateTodo } from "./utils/HandleAPI";
 
 function App() {
   const [todo, setTodo] = useState([]);
   const [text, setText] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [todoId, setTodoId] = useState("");
+
   useEffect(() => {
     getAllTodo(setTodo);
   }, []);
+
+  const updateMode = (_id, text) => {
+    setIsUpdating(true);
+    setText(text);
+    setTodoId(_id);
+  };
 
   return (
     <div className="App">
@@ -20,13 +29,25 @@ function App() {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <div className="add" onClick={() => addTodo(text, setText, setTodo)}>
-            Add
+          <div
+            className="add"
+            onClick={
+              isUpdating
+                ? () =>
+                    updateTodo(todoId, text, setTodo, setText, setIsUpdating)
+                : () => addTodo(text, setText, setTodo)
+            }
+          >
+            {isUpdating ? "Update" : "Add"}
           </div>
         </div>
         <div className="list">
           {todo.map((item) => (
-            <Todo key={item._id} text={item.text} />
+            <Todo
+              key={item._id}
+              text={item.text}
+              updateMode={() => updateMode(item._id, item.text)}
+            />
           ))}
         </div>
       </div>
